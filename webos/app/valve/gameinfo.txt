@@ -1,0 +1,8 @@
+// Xash3D gameinfo -- minimal descriptor so the engine accepts valve/ as a
+// gamedir even before any Half-Life data is present (menu via extras.pk3).
+basedir "valve"
+title "Half-Life"
+startmap "hldemo1"
+trainmap "t0a0"
+gamedll "dlls/hl.dll"
+gamedll_linux "dlls/hl.so"
