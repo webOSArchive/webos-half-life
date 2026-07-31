@@ -53,3 +53,12 @@ novacom put file:///media/cryptofs/apps/usr/palm/applications/org.webosarchive.x
 - Never call EGL directly; never ship metadata.json; `main` = real ELF binary
 - Every shipped ELF passes scripts/check-symbols.sh (Linaro WITHOUT the PDK
   sysroot links GLIBC_2.15+ and will not load)
+
+## Remote backup layout (private repo codepoet80/webos-xash3D)
+
+- `main` — this parent repo
+- `xash3d-webos` — the xash3d-fwgs submodule's `webos` branch (all engine patches)
+- `nanogl-webos` — the nested nanogl submodule's `webos` branch
+- .gitmodules still points at upstream FWGS URLs; after a fresh clone, fetch the
+  two backup branches into the submodules (or create real GitHub forks and
+  repoint .gitmodules — the cleaner long-term move).
