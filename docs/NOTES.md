@@ -94,6 +94,21 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 - Iteration loop: hot-push .so via `novacom put` into installed app dir +
   killall + palm-launch — no reinstall needed.
 
+### Session wrap 2026-07-31 (M3 done, touch done)
+- Black-screen-with-audio bug: GL frames were presented with SDL_Flip →
+  **SDL_GL_SwapBuffers is mandatory** on Palm SDL for GL surfaces.
+- Touch: Palm per-finger mouse events (`which`=0..4) → IN_TouchEvent
+  (host_sdl1.c SDLash_WebOSTouch). Fixes single-tap menu activation
+  (UI_MouseMove precedes the click inside IN_TouchEvent) and drives the
+  engine's built-in overlay. defaults.h: touch_enable=1, m_ignore=1 on webOS.
+- TRAP: cvars are ARCHIVED — a config.cfg written by an earlier build with old
+  defaults overrides new defaults (had to sed touch_enable/m_ignore to 1 in
+  /media/internal/xash/valve/config.cfg). Remember when changing any default.
+- USER-VERIFIED on device: single-tap menu, new game starts, touch overlay +
+  touch-look all work. cl_showfps 1 left in autoexec.cfg for a baseline
+  reading next session.
+- Uplink demo maps: campaign = hldemo1..3, hazard course = t0a0*.
+
 ### Device runs (older)
 - 2026-07-31 glsmoke (novacom shell, /tmp): GLES1.1 context OK at 1024×768
   ("OPENGLES, ver1, 565 d16 OK"), Adreno 220, MAX_TEXTURE 4096, 2 units,
