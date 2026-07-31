@@ -118,3 +118,10 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
   because the launcher owned the screen (hidden-surface swap throttle) when run
   from a shell. Re-measure from a launcher-launched app in M2 before worrying.
 - Device: topaz-linux over USB novacom, uber-kernel 3.0.5-93.
+
+### Perf first impressions (2026-07-31, user-reported, pre-tuning)
+- "Buttery smooth in a bunch of scenarios" — early Uplink areas, NPCs
+  interacting, no visible framerate drop. No numeric reading yet (running
+  instance predated the cl_showfps autoexec; counter appears after relaunch).
+- Still untested: room-full-of-enemies combat, flashlight (the known
+  dynamic-lightmap cliff), water/glass-heavy areas. Get numbers in M5.
