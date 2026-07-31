@@ -66,6 +66,35 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 
 ## Device runs
 
+### M2/M3 first light (2026-07-31, new dev tablet, stock 3.0.5 kernel)
+- **Engine RUNS: menu at native 1024×768 on ref_gles1 (NanoGL→libGLES_CM), first
+  frame 1.9 s; `map hldemo1` loads, player spawns, scripted intro sequence runs.**
+- Fixes en route: Palm SDL has no SDL_GL_LoadLibrary ("No dynamic GL support in
+  video driver") → skip on webOS; NanoGL lib name is the `GLES_LIB` **macro**
+  (line ~85), not the `lib1` locals in the dead second nanoGL_Init — patch both.
+  The GL_GetProcAddress error flood at ref init is harmless (egl* intentionally
+  unresolved; SDL owns the context).
+- Engine name-suffixes dlls: wants `dlls/hl_armv7l.so` / `cl_dlls/client_armv7l.so`
+  — hlsdk-portable's waf produces exactly those names. Client dll is REQUIRED
+  even for the menu.
+- **D6 resolved: dlopen from /media/internal/xash WORKS** (no noexec issue on
+  this vfat mount). Data contract: XASH3D_RODIR=app dir (extras.pk3),
+  XASH3D_BASEDIR=/media/internal/xash (valve/ data, dlls, saves, config).
+- Uplink demo data: Wise setup.exe carved by walking raw-deflate streams from
+  the PE overlay (0x3800; first stream 0x38b1; stream+CRC32 back-to-back).
+  wise_030=pak0.pak(1952 files), wise_076=gfx.wad(CONCHARS), wise_073=
+  halflife.wad(222), wise_070=cached.wad. Demo lacks delta.lst → fetched from
+  ValveSoftware/halflife network/delta.lst. gameinfo startmap = hldemo1
+  (Uplink campaign; t0a0* = hazard course).
+- Engine also needs gfx/conchars at boot (extras.pk3 alone is NOT enough to
+  reach the menu — contrary to earlier research assumption).
+- Cosmetic gaps: missing satchel/squeak/hgun models (not in demo), missing
+  resource/*_english.txt localization, no gamestartup music. vgui_support
+  missing is fine (disabled on ARM).
+- Iteration loop: hot-push .so via `novacom put` into installed app dir +
+  killall + palm-launch — no reinstall needed.
+
+### Device runs (older)
 - 2026-07-31 glsmoke (novacom shell, /tmp): GLES1.1 context OK at 1024×768
   ("OPENGLES, ver1, 565 d16 OK"), Adreno 220, MAX_TEXTURE 4096, 2 units,
   glGetError clean. Extensions include GL_OES_compressed_ETC1_RGB8_texture
