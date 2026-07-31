@@ -130,3 +130,7 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 - The DEMO's valve.rc order is: autoexec.cfg -> skill.cfg -> **config.cfg** ->
   **userconfig.cfg**. So archived cvars in config.cfg override autoexec!
   Put dev/default overrides in **userconfig.cfg**, not autoexec.cfg.
+- MEASURED (cl_showfps, user-reported): **60 fps still, 29–44 fps heavy
+  movement** at native 1024×768, zero tuning applied. 30fps target essentially
+  met stock. M5 scope shrinks to: verify flashlight + big firefight don't
+  cliff (r_dynamic 0 standing by), then lock in.
