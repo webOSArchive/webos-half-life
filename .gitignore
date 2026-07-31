@@ -1,0 +1,12 @@
+# build output / staging
+stage/
+fbuild/
+
+# game data -- never commit Valve content (Uplink demo or retail valve/)
+data/
+
+# editor / misc
+*.o
+*.so
+*.log
+*.ipk
