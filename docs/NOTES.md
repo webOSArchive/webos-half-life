@@ -43,6 +43,27 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 - C++ runtime plan (D5): link `-static-libstdc++` (Linaro libstdc++ 6.0.20 vs
   device 6.0.9).
 
+### M1 waf build (2026-07-31) — SUCCESS
+- `./waf configure -T release --use-sdl1 --enable-gles1 --disable-gl
+  --enable-stbtt --disable-mbedtls` with env CC/CXX = Linaro (no sysroot in CC;
+  sysroot via CFLAGS/LINKFLAGS). SDL 1.2 found via our `webos/pkgconfig/sdl.pc`
+  (PKG_CONFIG_LIBDIR).
+- Fixes needed (all in scripts/build-engine.sh env or fork commit 411ccc0f):
+  `-std=gnu11` (4.9 defaults gnu90); `-fgnu89-inline` (glibc-2.5 stat64 inline
+  dupes); `-Wno... → wscript: -Werror=strict-aliasing demoted`; link
+  `-static-libstdc++ -static-libgcc -lgcc_eh -lrt` (Linaro libstdc++.so wants
+  GLIBC_2.17 clock_gettime; libbacktrace wants _Unwind_Backtrace).
+- SDL1 backend bit-rot fixed: window_mode_t refactor, SDLash_Init(void),
+  + 3 stubs (VID_Info_f, Platform_GetDisplayOrientation→LANDSCAPE, gyro=false).
+- Artifacts (ALL GLIBC_2.4 clean): game_launch/xash3d (launcher exe),
+  engine/libxash.so (12MB unstripped), ref/gl/libref_gles1.so,
+  ref/soft/libref_soft.so, 3rdparty/mainui/libmenu.so,
+  filesystem/filesystem_stdio.so. D3: launcher+libxash shape (fine for LS2 —
+  launcher is a real ELF `main`).
+- M2 TODO noted: NanoGL dlopens Android name `libGLESv1_CM.so`; TouchPad has
+  `/usr/lib/libGLES_CM.so` → patch nanogl lib list. vgui skipped (arm). VOICE
+  uses opus — kept. mbedtls off (no TLS on device anyway).
+
 ## Device runs
 
 - 2026-07-31 glsmoke (novacom shell, /tmp): GLES1.1 context OK at 1024×768

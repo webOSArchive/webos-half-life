@@ -1,0 +1,10 @@
+# Palm PDK SDL 1.2.13 for the waf `pkg-config sdl` check (engine/wscript SDL12 path)
+prefix=/opt/PalmPDK
+libdir=${prefix}/device/lib
+includedir=${prefix}/include
+
+Name: sdl
+Description: Palm webOS PDK SDL 1.2.13
+Version: 1.2.13
+Libs: -L${libdir} -lSDL -lpthread
+Cflags: -I${includedir}/SDL -I${includedir} -D_GNU_SOURCE=1 -D_REENTRANT
