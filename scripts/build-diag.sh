@@ -5,6 +5,7 @@
 set -e
 cd "$(dirname "$0")/.."
 source webos/env.sh
+CC="$PDK_CC"   # diag tools stay on the PDK's own gcc 4.3.3 (proven combo)
 
 OUT=stage/diag
 mkdir -p "$OUT"
