@@ -9,11 +9,11 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 | ID | Decision | Status |
 |----|----------|--------|
 | D1 | Compiler: **RESOLVED → Linaro 4.9.4 + `--sysroot=/opt/PalmPDK/arm-gcc/sysroot`** | 2026-07-31 |
-| D2 | SDL backend: patch --use-sdl1 vs new platform/webos backend | OPEN |
-| D3 | Binary shape: single binary vs launcher + libxash.so | OPEN (prefer single) |
-| D4 | Renderer: ref_gles1 (NanoGL) vs ref_soft fallback | OPEN (default gles1) |
-| D5 | C++ runtime: device libstdc++ 6.0.9 vs bundled | OPEN (follows D1) |
-| D6 | Game .so location: /media/internal (noexec?) vs app dir | OPEN (test in M3) |
+| D2 | SDL backend: **RESOLVED → patched --use-sdl1 path** (webOS ifdefs in sdl1 backend) | 2026-07-31 |
+| D3 | Binary shape: **RESOLVED → launcher + libxash.so** (launcher is a real ELF, LS2-safe) | 2026-07-31 |
+| D4 | Renderer: **RESOLVED → ref_gles1 (NanoGL→libGLES_CM)** — working on device | 2026-07-31 |
+| D5 | C++ runtime: **RESOLVED → -static-libstdc++ -static-libgcc -lgcc_eh** | 2026-07-31 |
+| D6 | Game .so location: **RESOLVED → /media/internal/xash works** (dlopen OK, no noexec) | 2026-07-31 |
 
 ## M0 — scaffold
 
