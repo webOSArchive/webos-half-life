@@ -125,3 +125,8 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
   instance predated the cl_showfps autoexec; counter appears after relaunch).
 - Still untested: room-full-of-enemies combat, flashlight (the known
   dynamic-lightmap cliff), water/glass-heavy areas. Get numbers in M5.
+
+### Config exec-order trap (2026-07-31)
+- The DEMO's valve.rc order is: autoexec.cfg -> skill.cfg -> **config.cfg** ->
+  **userconfig.cfg**. So archived cvars in config.cfg override autoexec!
+  Put dev/default overrides in **userconfig.cfg**, not autoexec.cfg.
