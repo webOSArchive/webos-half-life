@@ -66,6 +66,26 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 
 ## Device runs
 
+### Fresh-device flight deploy (2026-08-08) — first clean end-to-end install
+- Target: hostname `FreshPad`, stock webOS 3.0.5, kernel **2.6.35-palm-tenderloin**
+  (NOT the uber-kernel unit). Nothing preinstalled; 10 GB free on /media/internal.
+- **ipk 0.1.3 was stale and would have shipped a broken game**: it predates the
+  SDL_GL_SwapBuffers fix and touch input (verified by symbol diff — 0.1.3 imports
+  `SDL_GL_LoadLibrary` and lacks `SDL_GL_SwapBuffers`). Rebuilt as **0.1.4**;
+  its libxash.so is byte-identical (sha256 636f0957…) to the stripped build tree.
+- Installed via palm-install; on-device md5 of every pushed file matches local.
+  Data pushed to /media/internal/xash/valve: pak0.pak (79 MB, ~19 s over novacom),
+  gfx/halflife/cached.wad, delta.lst, gameinfo.txt, dlls/hl_armv7l.so,
+  cl_dlls/client_armv7l.so. Total data tree ≈ 99 MB.
+- **D6 re-confirmed on this unit**: /media/internal is vfat rw, no `noexec`;
+  dlopen of the game dlls from there works.
+- Time to first frame: 4.98 s cold (first pak0 read), **1.6–1.8 s warm**.
+- `map hldemo1` verified: `Spawn Server: hldemo1` → `loading maps/hldemo1.bsp`,
+  process stable. Cosmetic-only warnings: `alpha_sky`/`solid_sky` missing (demo
+  has no sky textures), no resource/*_english.txt, no gamestartup music, vgui.
+- TRAP for future sessions: busybox **`ps` with no args does not list the app**;
+  use `ps ax`. A bare `ps | grep xash` reads as "crashed" when it is running.
+
 ### M2/M3 first light (2026-07-31, new dev tablet, stock 3.0.5 kernel)
 - **Engine RUNS: menu at native 1024×768 on ref_gles1 (NanoGL→libGLES_CM), first
   frame 1.9 s; `map hldemo1` loads, player spawns, scripted intro sequence runs.**
@@ -126,10 +146,19 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 - Still untested: room-full-of-enemies combat, flashlight (the known
   dynamic-lightmap cliff), water/glass-heavy areas. Get numbers in M5.
 
-### Config exec-order trap (2026-07-31)
-- The DEMO's valve.rc order is: autoexec.cfg -> skill.cfg -> **config.cfg** ->
-  **userconfig.cfg**. So archived cvars in config.cfg override autoexec!
-  Put dev/default overrides in **userconfig.cfg**, not autoexec.cfg.
+### Config exec-order trap (2026-07-31, CORRECTED 2026-08-08)
+- The DEMO's valve.rc order is: autoexec.cfg -> skill.cfg -> **config.cfg**.
+  So archived cvars in config.cfg override autoexec — don't put overrides there.
+- **CORRECTION (2026-08-08, fresh-device deploy):** `userconfig.cfg` is NOT in
+  valve.rc. The engine writes the line `exec userconfig.cfg` into **config.cfg
+  when it saves it** (`engine/common/con_utils.c:1424`). So userconfig.cfg only
+  ever runs on a device that has already saved a config.cfg — on a **fresh
+  install it is silently never executed**. The earlier entry only looked right
+  because that device had a saved config.cfg.
+- **Use `valve/userconfig.d/*.cfg` instead** — `host.c:1281` issues the
+  `userconfigd` command unconditionally every launch, which execs every
+  `userconfig.d/*.cfg` (`cmd.c:1371`), in filename order, regardless of whether
+  config.cfg exists. Verified on device: `execing userconfig.d/10-flighttest.cfg`.
 - MEASURED (cl_showfps, user-reported): **60 fps still, 29–44 fps heavy
   movement** at native 1024×768, zero tuning applied. 30fps target essentially
   met stock. M5 scope shrinks to: verify flashlight + big firefight don't
