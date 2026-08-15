@@ -37,6 +37,7 @@ chmod 755 "$APPDIR/xash3d"
 # engine menu assets -- boots to menu with zero Valve data
 cp "$BUILD/3rdparty/extras/extras.pk3" "$APPDIR/valve/extras.pk3"
 cp webos/app/valve/gameinfo.txt "$APPDIR/valve/"
+cp webos/app/valve/pad_*.cfg "$APPDIR/valve/"
 
 # app metadata (NO metadata.json -- it forces 320x480 phone-compat mode)
 cp webos/app/appinfo.json "$APPDIR/"

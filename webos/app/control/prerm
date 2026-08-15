@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+# prerm -- runs as ROOT via Preware / WebOS Quick Install before removal, undoing
+# what postinst added. NOTE: the launcher's Delete does NOT run maintainer
+# scripts, so remove via Preware/WOSQI for a clean uninstall (the leftovers are
+# otherwise harmless -- a udev rule and one shared jail mount line, no daemon).
+#
+UDEVRULE=/etc/udev/rules.d/99-xashhl-pad.rules
+
+# Other packages that share the /dev/input jail mount -- leave it in place if
+# any of them is still installed.
+SDLQUAKE_RULE=/etc/udev/rules.d/99-sdlquake-pad.rules
+SDLQUAKEHD_RULE=/etc/udev/rules.d/99-sdlquakehd-pad.rules
+CMDRKEEN_RULE=/etc/udev/rules.d/99-cmdrkeen-pad.rules
+BTGAMEPAD_RULE=/etc/udev/rules.d/99-bt-gamepad.rules
+
+exec </dev/null          # never block reading stdin under the appinstaller
+mount -o remount,rw / 2>/dev/null || true
+
+rm -f "$UDEVRULE"
+
+# The jail configs are SHARED with sdlquake / Commander Keen / the BT gamepad
+# package -- revert only if none of them is still installed.
+if [ ! -e "$SDLQUAKE_RULE" ] && [ ! -e "$SDLQUAKEHD_RULE" ] && [ ! -e "$CMDRKEEN_RULE" ] && \
+   [ ! -e "$BTGAMEPAD_RULE" ] && [ ! -e /usr/lib/libpmbtgamepad.so ]; then
+    for JAILCFG in /etc/jail_pdk.conf /etc/jail_game.conf; do
+        [ -f "$JAILCFG" ] || continue
+        sed -i -e '/^mkdir \/dev\/input$/d' -e '/^mount ro \/dev\/input$/d' "$JAILCFG"
+        rm -f "$JAILCFG.xashhl-orig"
+    done
+    echo "xashhl: reverted the /dev/input jail patch"
+else
+    echo "xashhl: leaving the /dev/input jail patch in place (another controller package is still installed)"
+fi
+
+( udevcontrol reload_rules || udevadm control --reload-rules ) </dev/null >/dev/null 2>&1 &
+mount -o remount,ro / 2>/dev/null || true
+
+echo "xashhl: controller + keyboard support removed."
+exit 0

@@ -4,16 +4,18 @@
 D1–D6, all build gotchas, device-run findings). Milestone plan M0–M6 lives in
 the session task list / plan file.
 
-## State (2026-07-31)
+## State (2026-08-15)
 
-M0–M3 done + touch input: **the game runs on the TouchPad** — menu and Uplink
-demo campaign at native 1024×768 on ref_gles1 (NanoGL→libGLES_CM), single-tap
-menus, full touch overlay + touch-look in game.
+M0–M4 code-complete: **the game runs on the TouchPad** — menu and Uplink demo
+campaign at native 1024×768 on ref_gles1 (NanoGL→libGLES_CM), single-tap
+menus, full touch overlay + touch-look, and evdev gamepad + keyboard support
+(`engine/platform/linux/in_evdev_webos.c`, ported from sdlquake; profiles →
+K_A_BUTTON…/Joy_AxisMotionEvent). ipk 0.1.5 deployed to TouchPadE; pad/kbd
+hardware verification still pending.
 
-Next: **M4 remainder** — evdev gamepad + keyboard (see task list; engine-side
-API is Key_Event(K_A_BUTTON…)/Joy_AxisMotionEvent; port sdlquake profile
-tables from `webos/input/in_evdev.c`), then M5 perf (30fps target,
-`r_dynamic 0` first), then M6 packaging.
+Next: finish M4 hardware test, then M5 perf (30fps target, `r_dynamic 0`
+first), then M6 packaging (postinst needs Preware/WOSQI; palm-install won't
+run it).
 
 ## Layout
 

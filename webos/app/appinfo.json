@@ -1,6 +1,6 @@
 {
     "id": "org.webosarchive.xashhl",
-    "version": "0.1.4",
+    "version": "0.1.6",
     "vendor": "webOS Archive",
     "type": "pdk",
     "main": "xash3d",

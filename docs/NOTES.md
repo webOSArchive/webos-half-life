@@ -66,6 +66,108 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 
 ## Device runs
 
+### M4 hardware-test feedback round (2026-08-15, TouchPadE, ipk 0.1.6)
+- USER-VERIFIED: DS4 + ShanWan work (rare stuck button), Logitech works,
+  Apple USB keyboard works, **HP BT keyboard works** (after re-pair, see below).
+- Stuck buttons (DS4/ShanWan BT): missed release events -- 2.6.35 predates
+  SYN_DROPPED so evdev overflows drop silently. FIX: 1 Hz EVIOCGKEY resync of
+  btn_raw/dpad_btn against kernel state; stuck button self-heals <=1 s.
+- **HP TouchPad Wireless Keyboard**: when paired it shows up as an evdev node
+  (name exactly that) emitting STANDARD KEY_* codes -- our module grabs it
+  and it just works. When the node is absent/ungrabbed, keys arrive via the
+  Luna->Palm-SDL path as private low keysyms; arrows VERIFIED by ordered-
+  press capture 2026-08-15: **18=Left 19=Up 20=Right 21=Down** (sym 24 =
+  dismiss-keyboard gesture, ignored). Mapped in host_sdl1.c; dev-mode
+  raw-code logging kept in both paths for future oddball keyboards.
+- TRAP fixed: a BT keyboard SLEEPING kills its event node; kbd_poll used to
+  ignore read errors, so the module held the dead fd and the scan skipped
+  that index forever ("held") -- keyboard silently fell back to the SDL path
+  (with then-wrong arrows) after every sleep cycle. kbd_poll now detects the
+  dead node and frees the slot like pad_poll; re-grab <=1 s after wake.
+- Diag trick: `chmod 0640 /dev/input/eventN` (root) hides a device from the
+  jailed game (uid 5003) without unpairing -- forces the Luna/SDL delivery
+  path for controlled capture. Restore with chmod 0666.
+- Keyboard defaults: engine table now binds e=+use f=impulse 100 r=+reload
+  (HL letters the demo's config never bound; device config.cfg patched too).
+- **Per-pad bind profiles**: valve/pad_<profile>.cfg exec'd on profile change
+  (deferred until host.config_executed so startup config.cfg can't stomp it).
+  Shipped: ds4/shanwan/generic = stock scheme, logitech/dragonrise =
+  quake-style stickless scheme (face buttons look, L1/R1 jump/fire, L2 use).
+  MODE (PS/Guide) button = "toggle touch_enable" (overlay on/off from pad).
+  VERIFIED end-to-end on device via fakepad. One unexplained silent skip of
+  the exec in the first 0.1.6 session -- diagnostic else-branch now logs
+  gamedironly/anypath flags if FS_FileExists ever fails there again.
+- **fakepad diag tool** (webos/diag/fakepad.c): creates a uinput gamepad
+  (default name ShanWan) from a novacom root shell -- exercises hotplug,
+  profile match, and cfg exec with NO physical pad. uinput node on this
+  kernel is /dev/input/uinput (not /dev/uinput).
+- **LunaSysMgr LANDMINE**: if a pad/dongle's event node disappears while
+  LunaSysMgr holds it open (webOS opens new HID nodes as candidate
+  keyboards), Luna busy-loops spamming "Could not read from input device"
+  and SILENTLY STOPS LAUNCHING APPS (palm-launch says "launching", nothing
+  happens, no log). Recovery: `killall LunaSysMgr` (UI restarts ~30 s).
+  Hit after unplugging the ShanWan dongle post-test. Not caused by our code.
+- palm-launch also no-ops while the screen is off/locked; wake first:
+  luna-send -n 1 palm://com.palm.display/control/setState '{"state":"on"}'
+- Launcher: -dev 2 now conditional on marker file /media/internal/xash/dev
+  (present on TouchPadE); without it only -log. Kills on-screen dev spam for
+  normal play.
+- Gamepad look sensitivity: adjustable in Options -> Gamepad (mainui
+  Gamepad.cpp, joy_pitch/joy_yaw) -- no code needed.
+
+### M4 input: evdev gamepad + keyboard ported (2026-08-15)
+- New engine module `engine/platform/linux/in_evdev_webos.c` (webos branch),
+  ported from sdlquake's in_evdev.c. **Stage 1 kept verbatim** (profiles
+  DS4/ShanWan/Logitech/DragonRise/default, stick_ok axis heuristics, 1 Hz scan
+  with node_boring cache, EVIOCGRAB, padstatus/padtest/padbtn/padaxis).
+  **Stage 2 replaced with engine-native output**: positions → Key_Event
+  (K_A_BUTTON..K_DPAD_*, default HL binds in in_keys.c + mainui menu nav),
+  sticks/triggers → Joy_AxisMotionEvent(0..5) in the default "sfpyrl"
+  hardware-axis order; keyboards → Key_Event + CL_CharEvent when host.textmode
+  (shift tracked module-side). No action scheme of our own anymore.
+- Hooks: Platform_RunEvents (host_sdl1.c, lazy init on first poll),
+  Linux_Shutdown (sys_linux.c), decls in platform.h under __webos__.
+- Trigger semantics: analog axes feed engine 0..32767 (K_JOY1/2 pressed at
+  joy_*_threshold 16384 = 50% pull; sdlquake used 30% — tune via cvars if it
+  feels dull). Digital trigger buttons emit K_L2/K_R2 ONLY when the pad has no
+  analog axis for that trigger (same default binds, no double-source races).
+- Stickless pads (Logitech/DragonRise): profile maps the d-pad axes as
+  move_x/move_y → analog movement; there is NO face-button-look fallback like
+  sdlquake had (engine scheme: face buttons = jump/use/reload/flashlight).
+  Touch-look covers aiming on those pads; rebindable if it ever matters.
+- Packaging: postinst/prerm adapted from sdlquake into webos/app/control/
+  (udev rule 99-xashhl-pad.rules; prerm coexists with sdlquake/sdlquakeHD/
+  cmdrkeen/btgamepad rules). **palm-install does NOT run postinst** — dev loop
+  pushes it and runs via novacom (root); end users need Preware/WOSQI (M6).
+- ipk 0.1.5 built (also carries the touch.cfg empty-file guard).
+- DEPLOYED to TouchPadE (c37f7a34…, stock 2.6.35 kernel) — this is the July-31
+  dev tablet where the sdlquake pad truth tables were captured; jail was
+  already patched by sdlquakeHD/btgamepad. Data tree from Jul 31 verified
+  current (dll md5s match local builds). Engine runs; evdev scan live, quiets
+  after 3 empty scans, no SCAN/POLL TOOK hitches, gpio-keys EACCES correctly
+  silent. Pad/keyboard hardware test pending (nothing attached yet).
+
+### Vacation regression: touch overlay vanished (diagnosed 2026-08-15)
+- SYMPTOM (user, on FreshPad): second launch onward, touch controls gone,
+  taps just moved a cursor. config.cfg was FINE (touch_enable/m_ignore both 1).
+- ROOT CAUSE: `touch.cfg` AND `touch.cfg.bak` both **0 bytes** (mtime Aug 13
+  15:20) — classic FAT zero-length-file damage: Touch_WriteConfig's rename
+  dance completed but the device died (battery/hard reset) before the vfat
+  page cache flushed. Engine then **execs the empty touch.cfg instead of
+  loading default buttons** (Touch_InitConfig only falls back when the file is
+  *missing*), and Touch_WriteConfig refuses to rewrite a config with no
+  buttons (`!touch.list_user.first → return`) — so the broken state is
+  **self-perpetuating**.
+- FIX (engine webos branch, in_touch.c): guard at end of Touch_InitConfig —
+  if the config produced zero buttons, Touch_LoadDefaults_f(). LoadDefaults
+  sets configchanged=true, so the next clean exit rewrites a valid touch.cfg
+  (self-healing). Deleted the two empty files on device; hot-pushed rebuilt
+  libxash.so (GLIBC_2.4 clean); relaunch shows no "execing touch.cfg" →
+  defaults loaded.
+- TRAP generalized: any engine-written cfg on /media/internal (vfat, async)
+  can be zero-length after power loss. config.cfg self-heals (empty exec →
+  defaults → rewritten on exit); only touch.cfg had the sticky trap.
+
 ### Fresh-device flight deploy (2026-08-08) — first clean end-to-end install
 - Target: hostname `FreshPad`, stock webOS 3.0.5, kernel **2.6.35-palm-tenderloin**
   (NOT the uber-kernel unit). Nothing preinstalled; 10 GB free on /media/internal.

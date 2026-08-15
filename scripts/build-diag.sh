@@ -27,5 +27,8 @@ $CC $WEBOS_CFLAGS -shared -fPIC -o "$OUT/sdlspy.so" webos/diag/sdlspy.c -ldl
 echo "== netprobe (jailed DNS/HTTP probe)"
 $CC $WEBOS_CFLAGS -o "$OUT/netprobe" webos/diag/netprobe.c
 
-scripts/check-symbols.sh "$OUT"/glsmoke "$OUT"/evread "$OUT"/egldiag "$OUT"/netprobe
+echo "== fakepad (uinput fake gamepad -- test engine hotplug/profiles without hardware)"
+$CC $WEBOS_CFLAGS -o "$OUT/fakepad" webos/diag/fakepad.c
+
+scripts/check-symbols.sh "$OUT"/glsmoke "$OUT"/evread "$OUT"/egldiag "$OUT"/netprobe "$OUT"/fakepad
 echo "diag tools in $OUT"
