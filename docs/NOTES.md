@@ -66,6 +66,18 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 
 ## Device runs
 
+### ipk 0.1.7: ARM game dlls ship in the app (2026-08-15)
+- hl_armv7l.so + client_armv7l.so now staged into the ipk under
+  RODIR/valve/{dlls,cl_dlls} (stripped; ipk total 4.3 MB). User setup for
+  full-game content is now just "copy your valve/ folder over USB".
+- Engine-side this needed NOTHING: FS_FindLibrary explicitly handles the
+  RoDir case (absolute path build), FS_PathExecFlag grants FS_EXEC_PATH on
+  non-Android, and BASEDIR/valve is searched before RODIR/valve so a
+  dlls/*.so in the data tree still overrides the shipped ones.
+- VERIFIED on TouchPadE: data-tree dlls renamed aside, `map hldemo1` via
+  autoexec -- SV_LoadProgs EntityAPI init + CL_LoadProgs + Spawn Server all
+  from the app-dir (stripped) libraries. Data tree restored after.
+
 ### M4 hardware-test feedback round (2026-08-15, TouchPadE, ipk 0.1.6)
 - USER-VERIFIED: DS4 + ShanWan work (rare stuck button), Logitech works,
   Apple USB keyboard works, **HP BT keyboard works** (after re-pair, see below).

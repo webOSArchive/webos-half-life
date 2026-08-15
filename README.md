@@ -24,11 +24,14 @@ You need your own copy of Half-Life (Steam, or an old WON CD install). Then:
 3. Copy the entire `valve` folder from your Half-Life install into it —
    from Steam that's `steamapps/common/Half-Life/valve` → `xash/valve`.
    (The `valve_hd` / `valve_addon` folders are optional and not needed.)
-4. Add the TouchPad-native game libraries — retail only ships x86 binaries.
-   Copy the two files from this port's release into the same tree:
-   `xash/valve/dlls/hl_armv7l.so` and `xash/valve/cl_dlls/client_armv7l.so`.
-5. Eject, unplug, launch. First start takes a few seconds while the 260 MB
+4. Eject, unplug, launch. First start takes a few seconds while the 260 MB
    `pak0.pak` is read; after that it's quick.
+
+The TouchPad-native game logic libraries ship inside the app itself (they're
+GPL hlsdk-portable builds, no Valve content), so the retail x86 binaries in
+your copied `valve/dlls` are simply ignored. Power users can override the
+built-in ones by placing their own `dlls/hl_armv7l.so` /
+`cl_dlls/client_armv7l.so` in `xash/valve/` — the data tree always wins.
 
 The *Uplink* demo works the same way with the demo's data (it lacks
 `delta.lst` — grab it from Valve's

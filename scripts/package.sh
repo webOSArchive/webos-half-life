@@ -39,12 +39,22 @@ cp "$BUILD/3rdparty/extras/extras.pk3" "$APPDIR/valve/extras.pk3"
 cp webos/app/valve/gameinfo.txt "$APPDIR/valve/"
 cp webos/app/valve/pad_*.cfg "$APPDIR/valve/"
 
+# ARM game libraries (GPL hlsdk-portable builds, no Valve content) -- users
+# then only copy their valve/ data; FS searches the app dir (RoDir) after
+# /media/internal, so copies in the data tree still override these
+HLSDK=hlsdk-portable/build
+mkdir -p "$APPDIR/valve/dlls" "$APPDIR/valve/cl_dlls"
+cp "$HLSDK/dlls/hl_armv7l.so" "$APPDIR/valve/dlls/"
+cp "$HLSDK/cl_dll/client_armv7l.so" "$APPDIR/valve/cl_dlls/"
+$STRIP "$APPDIR/valve/dlls/hl_armv7l.so" "$APPDIR/valve/cl_dlls/client_armv7l.so" 2>/dev/null || true
+
 # app metadata (NO metadata.json -- it forces 320x480 phone-compat mode)
 cp webos/app/appinfo.json "$APPDIR/"
 [ -f webos/app/icon.png ] && cp webos/app/icon.png "$APPDIR/"
 
 # ABI gate
-scripts/check-symbols.sh "$APPDIR/xash3d" "$APPDIR"/*.so
+scripts/check-symbols.sh "$APPDIR/xash3d" "$APPDIR"/*.so \
+    "$APPDIR/valve/dlls/hl_armv7l.so" "$APPDIR/valve/cl_dlls/client_armv7l.so"
 
 # control
 cat > "$STAGING/CONTROL/control" <<EOF
