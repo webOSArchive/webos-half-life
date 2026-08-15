@@ -83,6 +83,13 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
   shipped RODIR gameinfo (startmap hldemo1) wins and New Game breaks.
   Deleted the stale device gameinfo.txt; retail startmap c0a0 verified:
   "Spawn Server: c0a0", tram intro title sequence firing.
+- TRAP (bit us within the hour): **every ipk reinstall re-stamped the RODIR
+  gameinfo.txt with install-time mtime**, out-newering the user's liblist ->
+  New Game silently dead again ("the game wouldn't start"). FIX in
+  package.sh: `touch -t 197001020000` the staged gameinfo stub -- ipkg
+  PRESERVES tar mtimes (verified on device: stub shows Jan 1 1970), so user
+  data now always outranks the stub, including mtime-preserving copies of
+  1999-dated CD files.
 - **mainui fork**: 3rdparty/mainui now has a webos branch (backup:
   mainui-webos). One-shot "game data not found" alert box on main menu
   Think when gfx.wad is absent (ships with every HL data set, never the

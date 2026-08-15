@@ -56,6 +56,12 @@ cp "$HLSDK/dlls/hl_armv7l.so" "$APPDIR/valve/dlls/"
 cp "$HLSDK/cl_dll/client_armv7l.so" "$APPDIR/valve/cl_dlls/"
 $STRIP "$APPDIR/valve/dlls/hl_armv7l.so" "$APPDIR/valve/cl_dlls/client_armv7l.so" 2>/dev/null || true
 
+# The engine prefers whichever game descriptor is NEWER (basedir liblist.gam/
+# gameinfo.txt vs this shipped stub). A fresh install stamps now-mtimes, which
+# silently re-points startmap at the stub's demo map until the user's data is
+# touched again -- date the stub at the epoch so user data always wins.
+touch -t 197001020000 "$APPDIR/valve/gameinfo.txt"
+
 # app metadata (NO metadata.json -- it forces 320x480 phone-compat mode)
 cp webos/app/appinfo.json "$APPDIR/"
 [ -f webos/app/icon.png ] && cp webos/app/icon.png "$APPDIR/"
