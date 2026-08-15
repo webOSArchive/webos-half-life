@@ -8,8 +8,9 @@ Freshly installed, the game includes Uplink, the original freeware demo. If
 you have a copy of the full game, you can copy that onto your Touchpad and
 play the complete Half-Life game, see below for details.
 
-- Engine: [xash3d-fwgs](https://github.com/FWGS/xash3d-fwgs), `webos` branch
-  (all platform patches live there as commits)
+- Engine: [Xash3D FWGS](https://github.com/FWGS/xash3d-fwgs) plus our webOS
+  platform patches (`xash3d-fwgs/` in this tree); game logic from
+  [hlsdk-portable](https://github.com/FWGS/hlsdk-portable)
 - Game data: the .ipk bundles Valve's freeware 1999 *Uplink* demo, playable
   out of the box; retail `valve/` content is user-supplied (nothing
   Valve-owned lives in this repo)
