@@ -8,7 +8,7 @@
 #
 # Usage: check-symbols.sh <elf> [<elf> ...]
 set -u
-PDK=/opt/PalmPDK
+PDK="${PALM_PDK:-/opt/PalmPDK}"
 READELF="$PDK/arm-gcc/bin/arm-none-linux-gnueabi-readelf"
 [ -x "$READELF" ] || READELF=readelf
 

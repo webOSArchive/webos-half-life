@@ -21,11 +21,15 @@
 #   - -funroll-loops ICEs the PDK gcc 4.3.3 (diag tools); Linaro is fine but
 #     don't add it anyway -- keep flags identical across compilers
 
-PDK=/opt/PalmPDK
+# Override with env vars for non-default install locations:
+#   PALM_PDK          Palm PDK root         (default /opt/PalmPDK)
+#   LINARO_TOOLCHAIN  Linaro GCC 4.9.4-2017.01 arm-linux-gnueabi root
+#                     (default ~/linaro-toolchain; see README Prerequisites)
+PDK="${PALM_PDK:-/opt/PalmPDK}"
 export WEBOS_SYSROOT="$PDK/arm-gcc/sysroot"
 
-LINARO_BIN=/home/jonwise/linaro-toolchain/bin
-CROSS_PREFIX="$LINARO_BIN/arm-linux-gnueabi-"
+LINARO_BIN="${LINARO_TOOLCHAIN:-$HOME/linaro-toolchain}/bin"
+export CROSS_PREFIX="$LINARO_BIN/arm-linux-gnueabi-"
 
 export CC="${CROSS_PREFIX}gcc --sysroot=$WEBOS_SYSROOT"
 export CXX="${CROSS_PREFIX}g++ --sysroot=$WEBOS_SYSROOT"
@@ -44,5 +48,5 @@ export WEBOS_OPTS="-O2 -mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp -ffast-math
 export WEBOS_CFLAGS="$WEBOS_OPTS -D__webos__ -D_GNU_SOURCE=1 -D_REENTRANT -I$PDK/include -I$PDK/include/SDL"
 export WEBOS_LDFLAGS="-L$PDK/device/lib"
 
-# Device: see /home/jonwise/Projects/webos-hardware-tests/DEVICE-STATE.md
-export DEVICE_IP=192.168.10.67
+# Default test-device address; override per machine
+export DEVICE_IP="${DEVICE_IP:-192.168.10.67}"

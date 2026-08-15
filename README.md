@@ -174,11 +174,35 @@ The engine always writes `/media/internal/xash.log`.
 
 ## Building
 
-See `CLAUDE.md` for the build/deploy quickref and `docs/NOTES.md` for the
-device-truth log (toolchain decisions, hardware findings, every gotcha).
-Short version: Linaro GCC 4.9.4 + Palm PDK sysroot, `scripts/build-engine.sh`,
-`scripts/build-hlsdk.sh`, `scripts/package.sh`; every shipped ELF must pass
-`scripts/check-symbols.sh` (GLIBC ≤ 2.4).
+### Prerequisites (Linux x86_64 host)
+
+1. **Linaro GCC 4.9.4-2017.01** (arm-linux-gnueabi): download
+   `gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi.tar.xz` from the
+   [Linaro releases archive](https://releases.linaro.org/components/toolchain/binaries/4.9-2017.01/arm-linux-gnueabi/)
+   and unpack it to `~/linaro-toolchain` (or point `LINARO_TOOLCHAIN` at it).
+   This exact version matters: newer Linaro builds link GLIBC_2.15+ symbols
+   that the device's glibc 2.5 cannot load; the PDK's own gcc 4.3.3 cannot
+   compile the engine at all (see `docs/NOTES.md`, decision D1).
+2. **Palm PDK 3.0.5** installed at `/opt/PalmPDK` (or set `PALM_PDK`) — the
+   installer is preserved at [webosarchive.org](https://www.webosarchive.org)'s
+   SDK downloads. Provides the device sysroot, SDL headers, and the gcc used
+   for the diag tools.
+3. **novacom host tools** (`novacom`, `palm-install`, `palm-launch`) from the
+   same SDK — needed only for deploying to a device over USB.
+4. **Game data is not in this repo** (Valve content). `scripts/package.sh`
+   bundles the freeware Uplink demo when `data/uplink-valve/` exists —
+   extraction from the demo installer is documented in `docs/NOTES.md` —
+   and builds a demo-less ipk with a warning otherwise. Retail data goes
+   straight onto a device (see *Loading the full game* above).
+
+### Build
+
+`scripts/build-engine.sh`, `scripts/build-hlsdk.sh`, then
+`scripts/package.sh` for the ipk. Every shipped ELF must pass
+`scripts/check-symbols.sh` (GLIBC ≤ 2.4 — the gate that keeps binaries
+loadable on webOS). See `CLAUDE.md` for the deploy quickref and
+`docs/NOTES.md` for the device-truth log: toolchain decisions, hardware
+findings, and every gotcha this port has ever hit.
 
 Half-Life is a Valve product; this port contains no Valve assets or code —
 bring your own game data. Engine under GPLv3 per Xash3D FWGS.

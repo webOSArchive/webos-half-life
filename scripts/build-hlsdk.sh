@@ -9,8 +9,8 @@ source webos/env.sh
 
 cd hlsdk-portable
 
-export CC=/home/jonwise/linaro-toolchain/bin/arm-linux-gnueabi-gcc
-export CXX=/home/jonwise/linaro-toolchain/bin/arm-linux-gnueabi-g++
+export CC="${CROSS_PREFIX}gcc"
+export CXX="${CROSS_PREFIX}g++"
 export AR RANLIB STRIP
 SYSROOT_FLAG="--sysroot=$WEBOS_SYSROOT"
 COMPAT="-include $ROOT/webos/glibc25-math-compat.h"
