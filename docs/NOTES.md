@@ -66,6 +66,27 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 
 ## Device runs
 
+### SHIP-BLOCKER found+fixed: "icon opens Software Manager" (2026-08-15)
+- USER-REPORTED on FreshPad after a Preware install: tapping the icon opened
+  com.palm.app.swmanager instead of the game.
+- Mechanism (LunaCE source, WebAppMgrProxy::appLaunch): any app whose
+  ApplicationDescription status != Status_Ready has ALL launches redirected
+  to Software Manager.
+- Root record: /var/palm/data/com.palm.appInstallService/installHistory.db
+  (sqlite) held our appId at statusValue 18, state "remove failed",
+  reason FAILED_IPKG_REMOVE -- a launcher/appinstalld-path removal had
+  failed earlier. Suspected cause: the app dir doesn't empty (engine/SDL
+  runtime droppings: engine.log when basedir unavailable, .pulse-cookie,
+  .xash_id) so ipkg fails the remove. The poison record SURVIVES Luna
+  restarts and reinstalls via ipkgservice (Preware/WOSQI never touch
+  appinstalld's db).
+- Device fix: pull db, delete the row (python sqlite locally), killall
+  appinstalld, push db back, restart Luna. NB: after multiple same-boot
+  Luna restarts, native app launches were silently dropped (accepted, no
+  jailer spawn, not in running list) -- full reboot required to settle.
+- DURABLE FIX (prerm): killall xash3d + rm the runtime droppings BEFORE
+  ipkg removes files, so the app dir always empties.
+
 ### App Museum updater wired + verified (2026-08-15, 0.1.11)
 - engine/platform/linux/updater_webos.c, ported from sdlquake's updater.c
   (same design rules: background pthread, silent on all failures, main

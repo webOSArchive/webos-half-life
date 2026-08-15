@@ -15,6 +15,17 @@ CMDRKEEN_RULE=/etc/udev/rules.d/99-cmdrkeen-pad.rules
 BTGAMEPAD_RULE=/etc/udev/rules.d/99-bt-gamepad.rules
 
 exec </dev/null          # never block reading stdin under the appinstaller
+
+# The app dir must EMPTY or ipkg fails the whole removal (FAILED_IPKG_REMOVE)
+# and appinstalld wedges the app id in "remove failed" state -- after which
+# every icon tap opens Software Manager instead of the game, surviving both
+# reinstalls via ipkgservice and Luna restarts (hardware-observed). Kill a
+# running instance and sweep the runtime droppings the engine/SDL leave
+# behind (engine.log when the basedir is unavailable, pulse/session cookies).
+killall xash3d 2>/dev/null
+APPDIR=/media/cryptofs/apps/usr/palm/applications/org.webosarchive.xashhl
+rm -f "$APPDIR"/engine.log "$APPDIR"/*.log "$APPDIR"/.pulse-cookie "$APPDIR"/.xash_id 2>/dev/null
+
 mount -o remount,rw / 2>/dev/null || true
 
 rm -f "$UDEVRULE"
