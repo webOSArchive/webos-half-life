@@ -66,6 +66,24 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 
 ## Device runs
 
+### ipk 0.1.10: Uplink demo bundled -- playable out of the box (2026-08-15)
+- data/uplink-valve/{pak0.pak,gfx.wad,halflife.wad,cached.wad} staged into
+  the app's valve/ (data/ stays gitignored; package.sh warns and builds a
+  demo-less ipk if absent). ipk now 47 MB.
+- Precedence verified on device: both paks mount (demo 1952 files from
+  RODIR, retail 3453 from basedir), basedir mounted later = wins per-file.
+  Retail install unaffected; Uplink maps remain as a bonus.
+- Fresh-install test: basedir hidden -> boots, no data-notice (gfx.wad now
+  ships), autoexec map hldemo1 -> IN GAME, screenshot-verified (Lambda
+  Reactor Complex title card, HUD + touch overlay live).
+- TRAP: right after palm-install, the first boot's RODIR archive scan
+  missed the freshly-extracted pak/wads (cryptofs/FUSE settle race --
+  a .fuse_hidden file was still in the dir). Self-heals on next launch;
+  don't panic-debug a missing bundled pak on the first post-install boot.
+- Saw one wedged engine process that ignored SIGTERM (spinning, killall -9
+  needed). Unclear cause (possibly same install race window); watch for
+  recurrence.
+
 ### RETAIL Half-Life running from the user's 1999 CD (2026-08-15, 0.1.9)
 - CD (/media/jonwise/HALF_LIFE, Jun 1999 Sierra print) is InstallShield 5:
   data1.cab/hdr. No sudo needed -- built unshield from source in the

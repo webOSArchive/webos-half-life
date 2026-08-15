@@ -41,6 +41,20 @@ cp webos/app/valve/pad_*.cfg "$APPDIR/valve/"
 # network delta table (Valve SDK-published, same license basis as the hlsdk
 # dlls) -- required at engine init, and the Uplink demo data lacks it
 cp webos/app/valve/delta.lst "$APPDIR/valve/"
+
+# Uplink demo data (Valve's freeware 1999 demo) -- a fresh install is a
+# playable game out of the box. Lives in data/uplink-valve/ (gitignored;
+# extraction from the demo installer is documented in docs/NOTES.md).
+# A user's own data in /media/internal/xash/valve is searched first, so
+# copied retail content overrides all of this per-file -- and the demo's
+# Uplink maps remain available alongside retail as a bonus.
+if [ -f data/uplink-valve/pak0.pak ]; then
+    cp data/uplink-valve/pak0.pak data/uplink-valve/gfx.wad \
+       data/uplink-valve/halflife.wad data/uplink-valve/cached.wad \
+       "$APPDIR/valve/"
+else
+    echo "WARNING: data/uplink-valve/ missing -- building WITHOUT the bundled Uplink demo"
+fi
 # blank 128x128 charset satisfies the engine's hard gfx/conchars existence
 # gate so a data-less install reaches the menu (console text uses the TTF
 # fonts from extras.pk3; real game data overrides this file)

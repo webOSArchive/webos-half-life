@@ -4,10 +4,15 @@ A native port of **Half-Life** (Xash3D FWGS engine + hlsdk-portable game logic)
 to the HP TouchPad running webOS 3.0.5 — 1024×768 on the GPU via GLES1
 (NanoGL→libGLES_CM), touch controls, and full gamepad/keyboard support.
 
+Freshly installed, the game includes Uplink, the original freeware demo. If
+you have a copy of the full game, you can copy that onto your Touchpad and
+play the complete Half-Life game, see below for details.
+
 - Engine: [xash3d-fwgs](https://github.com/FWGS/xash3d-fwgs), `webos` branch
   (all platform patches live there as commits)
-- Game data: works with the Half-Life *Uplink* demo data or retail `valve/`
-  content — game data is **not** included in this repo or the .ipk
+- Game data: the .ipk bundles Valve's freeware 1999 *Uplink* demo, playable
+  out of the box; retail `valve/` content is user-supplied (nothing
+  Valve-owned lives in this repo)
 - Install: `.ipk` via Preware / WebOS Quick Install (the postinst needs root to
   expose `/dev/input` to the app jail — the launcher's plain installer can't
   do that, so controllers/keyboards won't work with a `palm-install` install)
@@ -55,8 +60,10 @@ your copied `valve/dlls` are simply ignored. Power users can override the
 built-in ones by placing their own `dlls/hl_armv7l.so` /
 `cl_dlls/client_armv7l.so` in `xash/valve/` — the data tree always wins.
 
-The *Uplink* demo works the same way with the demo's data (everything else
-it needs, including `delta.lst`, ships with the app).
+The *Uplink* demo ships inside the app, so there's nothing to copy for it —
+a fresh install goes straight to a playable game. Copying retail content
+upgrades to the full game (your files override the bundled demo per-file),
+and the Uplink maps stay available alongside it.
 
 ## Controls
 
