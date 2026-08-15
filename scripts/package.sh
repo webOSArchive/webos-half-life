@@ -60,6 +60,10 @@ fi
 # fonts from extras.pk3; real game data overrides this file)
 mkdir -p "$APPDIR/valve/gfx"
 cp webos/app/valve/gfx/conchars "$APPDIR/valve/gfx/"
+# GameUI strings for WON-era data (predates Steam's gameui_english.txt --
+# without it the menu shows raw token names); Steam data overrides per-file
+mkdir -p "$APPDIR/valve/resource"
+cp webos/app/valve/resource/gameui_english.txt "$APPDIR/valve/resource/"
 
 # ARM game libraries (GPL hlsdk-portable builds, no Valve content) -- users
 # then only copy their valve/ data; FS searches the app dir (RoDir) after
