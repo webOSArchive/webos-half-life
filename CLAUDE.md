@@ -20,12 +20,17 @@ notices, ipk 0.1.11 (playable out of the box; user data overrides per-file).
   appstorage). The WON-strings cosmetic (GameUI_* keys) is the only known
   release nit.
 
-## Layout
+## Layout (single flattened repo since 2026-08-15)
 
-- `xash3d-fwgs/` — engine submodule, branch `webos` (all platform patches live
-  here as commits; nested submodules `3rdparty/nanogl` AND `3rdparty/mainui`
-  also carry `webos` branches)
-- `hlsdk-portable/` — game logic submodule (unpatched upstream)
+This repo IS github.com/webOSArchive/webos-half-life (origin) — one
+self-contained tree, no submodules. The submodule-era layout is retired:
+the old private backup (codepoet80/webos-xash3D, ARCHIVED read-only) keeps
+the fork-branch history, and the local `*.submodule-era/` dirs (gitignored)
+hold the final submodule clones. Engine patches are now plain commits here.
+
+- `xash3d-fwgs/` — engine (Xash3D FWGS + our webOS patches, vendored;
+  nested 3rdparty trees incl. mainui/nanogl are plain dirs)
+- `hlsdk-portable/` — game logic (vendored upstream, unpatched)
 - `webos/` — env.sh (toolchain), pkgconfig/sdl.pc shim, app/ (appinfo, icon,
   control-m4-todo/ = postinst/prerm to adapt in M4), input/ (sdlquake evdev
   reference), diag/ (glsmoke etc.), glibc25-math-compat.h
@@ -60,19 +65,11 @@ novacom put file:///media/cryptofs/apps/usr/palm/applications/org.webosarchive.x
 - Every shipped ELF passes scripts/check-symbols.sh (Linaro WITHOUT the PDK
   sysroot links GLIBC_2.15+ and will not load)
 
-## Remote backup layout (private repo codepoet80/webos-xash3D)
+## Remotes
 
-- `main` — this parent repo
-- `xash3d-webos` — the xash3d-fwgs submodule's `webos` branch (all engine patches)
-- `nanogl-webos` — the nested nanogl submodule's `webos` branch
-- `mainui-webos` — the nested mainui submodule's `webos` branch (menu patches)
-- .gitmodules still points at upstream FWGS URLs; after a fresh clone, fetch the
-  backup branches into the submodules (or create real GitHub forks and
-  repoint .gitmodules — the cleaner long-term move).
-
-## Public release repo (github.com/webOSArchive/webos-half-life)
-
-Single flattened tree, no submodules: parent history + a `flatten:` commit
-vendoring the fork branches (SHAs recorded in that commit's message).
-Releases re-vendor from the dev fork branches; verified to build from a
-fresh clone.
+- `origin` = github.com/webOSArchive/webos-half-life — the one repo now:
+  dev AND release, public, flattened (parent history + `flatten:` commit
+  whose message records the vendored fork SHAs).
+- codepoet80/webos-xash3D — ARCHIVED (read-only): the submodule-era backup
+  (main + xash3d-webos + nanogl-webos + mainui-webos branches). Consult it
+  for pre-flatten fork history; never push there.

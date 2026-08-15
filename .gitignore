@@ -10,3 +10,6 @@ data/
 *.so
 *.log
 *.ipk
+
+# submodule-era clones parked during the flatten migration
+*.submodule-era/
