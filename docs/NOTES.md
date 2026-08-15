@@ -66,7 +66,22 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 
 ## Device runs
 
-### ipk 0.1.7: ARM game dlls ship in the app (2026-08-15)
+### ipk 0.1.8: data-less first launch reaches the menu (2026-08-15)
+- USER-REPORTED: deleting/renaming /media/internal/xash made the game
+  un-launchable, and the README's "create a folder named xash" was wrong
+  (the folder already exists after first launch).
+- Fresh-install boot gates found by launching with NO basedir, fixed in order:
+  1. engine Sys_Errors on chdir(basedir) -- launcher now mkdirs it first
+  2. hard existence gate on gfx/conchars (Host_InitCommon) -- ship a BLANK
+     16384-byte valve/gfx/conchars in the app; console text renders via the
+     stbtt TTFs in extras.pk3, so conchars is never actually drawn from, and
+     real game data (gfx.wad, searched first) overrides it
+  3. Delta_InitFields Sys_Errors without delta.lst -- ship Valve's
+     SDK-published delta.lst in the app (same license basis as the hlsdk
+     dlls; also removes the demo's fetch-it-yourself step)
+- VERIFIED on TouchPadE: rm -rf basedir -> launch -> menu, engine recreates
+  the tree. README rewritten around launch-first flow (merge valve/ into the
+  existing xash/, never delete it -- saves/config live there).
 - hl_armv7l.so + client_armv7l.so now staged into the ipk under
   RODIR/valve/{dlls,cl_dlls} (stripped; ipk total 4.3 MB). User setup for
   full-game content is now just "copy your valve/ folder over USB".

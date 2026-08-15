@@ -38,6 +38,14 @@ chmod 755 "$APPDIR/xash3d"
 cp "$BUILD/3rdparty/extras/extras.pk3" "$APPDIR/valve/extras.pk3"
 cp webos/app/valve/gameinfo.txt "$APPDIR/valve/"
 cp webos/app/valve/pad_*.cfg "$APPDIR/valve/"
+# network delta table (Valve SDK-published, same license basis as the hlsdk
+# dlls) -- required at engine init, and the Uplink demo data lacks it
+cp webos/app/valve/delta.lst "$APPDIR/valve/"
+# blank 128x128 charset satisfies the engine's hard gfx/conchars existence
+# gate so a data-less install reaches the menu (console text uses the TTF
+# fonts from extras.pk3; real game data overrides this file)
+mkdir -p "$APPDIR/valve/gfx"
+cp webos/app/valve/gfx/conchars "$APPDIR/valve/gfx/"
 
 # ARM game libraries (GPL hlsdk-portable builds, no Valve content) -- users
 # then only copy their valve/ data; FS searches the app dir (RoDir) after
