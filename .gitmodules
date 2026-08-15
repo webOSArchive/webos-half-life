@@ -1,6 +1,0 @@
-[submodule "xash3d-fwgs"]
-	path = xash3d-fwgs
-	url = https://github.com/FWGS/xash3d-fwgs.git
-[submodule "hlsdk-portable"]
-	path = hlsdk-portable
-	url = https://github.com/FWGS/hlsdk-portable.git

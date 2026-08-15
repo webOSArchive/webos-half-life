@@ -25,7 +25,8 @@ configure)
     ./waf configure -T release --disable-goldsrc-support --disable-werror
     ;;
 build)
-    [ -d build ] || "$0" configure
+    # (can't re-invoke "$0" here -- it's a relative path and we cd'd away)
+    [ -d build ] || ./waf configure -T release --disable-goldsrc-support --disable-werror
     ./waf build -j"$(nproc)"
     ;;
 clean) ./waf clean ;;
