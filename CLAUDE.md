@@ -66,6 +66,13 @@ novacom put file:///media/cryptofs/apps/usr/palm/applications/org.webosarchive.x
 - `xash3d-webos` — the xash3d-fwgs submodule's `webos` branch (all engine patches)
 - `nanogl-webos` — the nested nanogl submodule's `webos` branch
 - `mainui-webos` — the nested mainui submodule's `webos` branch (menu patches)
+
+## Public release repo (github.com/webOSArchive/webos-half-life)
+
+Single flattened tree, no submodules: parent history + a `flatten:` commit
+vendoring the fork branches (SHAs recorded in that commit's message).
+Releases re-vendor from the dev fork branches; verified to build from a
+fresh clone.
 - .gitmodules still points at upstream FWGS URLs; after a fresh clone, fetch the
   two backup branches into the submodules (or create real GitHub forks and
   repoint .gitmodules — the cleaner long-term move).
