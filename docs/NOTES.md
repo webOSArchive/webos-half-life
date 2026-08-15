@@ -82,6 +82,16 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 - VERIFIED on TouchPadE: rm -rf basedir -> launch -> menu, engine recreates
   the tree. README rewritten around launch-first flow (merge valve/ into the
   existing xash/, never delete it -- saves/config live there).
+- FOLLOW-UP (user-tested the delete path for real): data-less boot = engine
+  menu over a GRAY background (menu art is Valve data), and New Game does
+  nothing -- which is correct but reads as broken. README now says plainly
+  that the xash folder IS the installed game and deleting it removes the
+  game data. Device data restored from data/uplink-valve/ (user's saves/
+  config were lost with the delete; defaults regenerate, e/f/r binds are
+  engine defaults now, autoexec/dev marker recreated by hand).
+- With -dev off, Con_Printf lines do NOT reach xash.log (stdout) or
+  engine.log (header only) -- remote verification of a non-dev build needs
+  the dev marker restored first. Bit us during the restore check.
 - hl_armv7l.so + client_armv7l.so now staged into the ipk under
   RODIR/valve/{dlls,cl_dlls} (stripped; ipk total 4.3 MB). User setup for
   full-game content is now just "copy your valve/ folder over USB".

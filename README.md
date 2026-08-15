@@ -30,9 +30,12 @@ You need your own copy of Half-Life (Steam, or an old WON CD install). Then:
 4. Eject, unplug, launch. First start takes a few seconds while the 260 MB
    `pak0.pak` is read; after that it's quick.
 
-Don't delete or rename the `xash` folder itself: it holds your saves,
-settings, and screenshots (`xash/valve/`). If it does get deleted the game
-recreates it on the next launch — you just lose those files.
+**The `xash` folder IS your installed game** — the copied Half-Life content
+plus your saves, settings, and screenshots all live in it. Deleting or
+renaming it removes the game data: the app itself still launches (you'll get
+the bare engine menu over a gray background, and starting a game does
+nothing), but you're back to step 2 — recopy your `valve` folder to play
+again.
 
 The TouchPad-native game logic libraries ship inside the app itself (they're
 GPL hlsdk-portable builds, no Valve content), so the retail x86 binaries in
