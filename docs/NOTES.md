@@ -66,6 +66,14 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 
 ## Device runs
 
+### WOSQI install lifecycle field-verified (2026-08-15, 0.1.10)
+- USER-PERFORMED: WOSQI uninstall (prerm: removed our udev rule, left the
+  shared jail patch for sdlquakehd/btgamepad) then WOSQI install (postinst:
+  99-xashhl-pad.rules re-created, jail mounts intact, no installer hang),
+  then played. First real-world run of both maintainer scripts -- the
+  novacom-manual era is over. M6 packaging path is proven end to end.
+
+
 ### ipk 0.1.10: Uplink demo bundled -- playable out of the box (2026-08-15)
 - data/uplink-valve/{pak0.pak,gfx.wad,halflife.wad,cached.wad} staged into
   the app's valve/ (data/ stays gitignored; package.sh warns and builds a
