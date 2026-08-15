@@ -66,6 +66,35 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 
 ## Device runs
 
+### RETAIL Half-Life running from the user's 1999 CD (2026-08-15, 0.1.9)
+- CD (/media/jonwise/HALF_LIFE, Jun 1999 Sierra print) is InstallShield 5:
+  data1.cab/hdr. No sudo needed -- built unshield from source in the
+  scratchpad. Groups: "Half-Life Program Files" (valve/ wads, cfgs, maps,
+  models, liblist.gam) + "Half-Life PAK File" (valve/pak0.pak, 302 MB;
+  also tfc/ pak -- not installed, future TFC candidate). Extraction cmds in
+  README. Assembled tree archived locally at data/retail-valve/ (366 MB).
+- Transfer: tar the tree, novacom put one tarball (~380 MB), busybox tar x
+  on device. vfat chown warnings are noise. EXCLUDED config.cfg (preserve
+  user settings) and x86 dlls/cl_dlls/hw.
+- gameinfo vs liblist PRECEDENCE (filesystem/searchpath.c): basedir gameinfo
+  replaces the rodir one only if its mtime is NEWER; with both liblist.gam
+  and gameinfo.txt in basedir, liblist converts to gameinfo only if newer.
+  tar preserves 1999 mtimes -> `touch liblist.gam` after extract or the
+  shipped RODIR gameinfo (startmap hldemo1) wins and New Game breaks.
+  Deleted the stale device gameinfo.txt; retail startmap c0a0 verified:
+  "Spawn Server: c0a0", tram intro title sequence firing.
+- **mainui fork**: 3rdparty/mainui now has a webos branch (backup:
+  mainui-webos). One-shot "game data not found" alert box on main menu
+  Think when gfx.wad is absent (ships with every HL data set, never the
+  app). Verified BOTH states by screenshot.
+- DIAG GOLD: remote screenshots work --
+  `luna-send -n 1 palm://com.palm.systemmanager/takeScreenShot
+  '{"file":"/media/internal/x.png"}'` then novacom get/cat. First time we
+  could SEE the device screen from the dev box.
+- Cosmetic: WON-era data lacks Steam gameui strings -- Quit hint renders as
+  raw "GameUI_QuitConfirmationText" key. Candidate for a strings patch in
+  extras or mainui later.
+
 ### ipk 0.1.8: data-less first launch reaches the menu (2026-08-15)
 - USER-REPORTED: deleting/renaming /media/internal/xash made the game
   un-launchable, and the README's "create a folder named xash" was wrong

@@ -27,6 +27,18 @@ You need your own copy of Half-Life (Steam, or an old WON CD install). Then:
    existing files — they're your settings). From Steam the source is
    `steamapps/common/Half-Life/valve`. The `valve_hd` / `valve_addon`
    folders are optional and not needed.
+
+   **From a retail CD**: the disc holds an InstallShield installer, not a
+   ready-made `valve` folder — install the game on a PC first and copy the
+   installed `valve` folder. On Linux/Mac you can pull it straight off the
+   disc with [unshield](https://github.com/twogood/unshield):
+
+       unshield -d out -g "Half-Life Program Files" x /path/to/cd/data1.cab
+       unshield -d out -g "Half-Life PAK File"      x /path/to/cd/data1.cab
+
+   then merge `out/Half-Life_Program_Files/valve/` and
+   `out/Half-Life_PAK_File/valve/pak0.pak` into one `valve` folder and copy
+   that. (Skip the CD's `dlls`/`cl_dlls` — they're x86 and unused here.)
 4. Eject, unplug, launch. First start takes a few seconds while the 260 MB
    `pak0.pak` is read; after that it's quick.
 

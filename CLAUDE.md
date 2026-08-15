@@ -20,7 +20,8 @@ run it).
 ## Layout
 
 - `xash3d-fwgs/` — engine submodule, branch `webos` (all platform patches live
-  here as commits; nested submodule `3rdparty/nanogl` also has a `webos` branch)
+  here as commits; nested submodules `3rdparty/nanogl` AND `3rdparty/mainui`
+  also carry `webos` branches)
 - `hlsdk-portable/` — game logic submodule (unpatched upstream)
 - `webos/` — env.sh (toolchain), pkgconfig/sdl.pc shim, app/ (appinfo, icon,
   control-m4-todo/ = postinst/prerm to adapt in M4), input/ (sdlquake evdev
@@ -61,6 +62,7 @@ novacom put file:///media/cryptofs/apps/usr/palm/applications/org.webosarchive.x
 - `main` — this parent repo
 - `xash3d-webos` — the xash3d-fwgs submodule's `webos` branch (all engine patches)
 - `nanogl-webos` — the nested nanogl submodule's `webos` branch
+- `mainui-webos` — the nested mainui submodule's `webos` branch (menu patches)
 - .gitmodules still points at upstream FWGS URLs; after a fresh clone, fetch the
   two backup branches into the submodules (or create real GitHub forks and
   repoint .gitmodules — the cleaner long-term move).
