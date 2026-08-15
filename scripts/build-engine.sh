@@ -25,7 +25,13 @@ COMPAT="-include $ROOT/webos/glibc25-math-compat.h"
 #   "symbol stat64 is already defined" in any TU with _FILE_OFFSET_BITS=64)
 # -Wno-error=strict-aliasing: gcc 4.9 flags type-puns in ref_soft that newer
 #   gcc (upstream's CI) accepts; the wscript's -Werror list predates 4.9
-export CFLAGS="$SYSROOT_FLAG $WEBOS_OPTS -std=gnu11 -fgnu89-inline -Wno-error=strict-aliasing -D__webos__"
+# app version for the App Museum update check (updater_webos.c) -- parsed
+# from appinfo.json so the two can never drift apart. Unquoted on purpose:
+# CFLAGS is expanded unquoted and a quoted string would not survive
+# word-splitting; the stub stringifies it.
+APP_VERSION=$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$ROOT/webos/app/appinfo.json")
+
+export CFLAGS="$SYSROOT_FLAG $WEBOS_OPTS -std=gnu11 -fgnu89-inline -Wno-error=strict-aliasing -D__webos__ -DXASHHL_VERSION_RAW=$APP_VERSION"
 export CXXFLAGS="$SYSROOT_FLAG $WEBOS_OPTS -D__webos__ $COMPAT"
 # -static-libstdc++: Linaro's shared libstdc++ needs GLIBC_2.17 clock_gettime;
 # statically linked it resolves clock_gettime from the sysroot's librt (D5).

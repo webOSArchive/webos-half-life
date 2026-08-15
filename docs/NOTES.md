@@ -66,6 +66,26 @@ depend on it. The full plan lives in the session plan file; milestones M0–M6.
 
 ## Device runs
 
+### App Museum updater wired + verified (2026-08-15, 0.1.11)
+- engine/platform/linux/updater_webos.c, ported from sdlquake's updater.c
+  (same design rules: background pthread, silent on all failures, main
+  thread announces, -noupdatecheck). Listing name **"Half-Life"**; version
+  compiled from appinfo.json via -DXASHHL_VERSION_RAW in build-engine.sh
+  (NB: CFLAGS changes need `build-engine.sh configure` -- waf caches env
+  at configure time; a plain build silently keeps old flags).
+- Xash twist vs Quake: release builds draw no console notify lines
+  (host.allow_console off), so the positive result publishes via read-only
+  cvar `webos_update_version`; the mainui webos branch shows a one-shot
+  menu box "Half-Life <ver> is available in the App Catalog."
+- DEVICE-VERIFIED both paths on FreshPad (which is where the user's WOSQI
+  0.1.10 fresh-install test actually happened): positive via temp build
+  querying listed "Quake HD" (notice box screenshot), silent via real
+  "Half-Life" (unlisted -> clean menu screenshot). Jail DNS/port-80 path
+  confirmed on a second stock-kernel device.
+- Endpoint probes (curl, dev box): Quake HD/1.0.0 -> version+downloadURI
+  JSON; Half-Life/0.1.10 -> {"error":"No matching app found"} -- listing
+  submission (user-side) flips the feature live; nothing to redeploy.
+
 ### WOSQI install lifecycle field-verified (2026-08-15, 0.1.10)
 - USER-PERFORMED: WOSQI uninstall (prerm: removed our udev rule, left the
   shared jail patch for sdlquakehd/btgamepad) then WOSQI install (postinst:

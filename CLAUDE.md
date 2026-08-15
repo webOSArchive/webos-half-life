@@ -4,18 +4,21 @@
 D1–D6, all build gotchas, device-run findings). Milestone plan M0–M6 lives in
 the session task list / plan file.
 
-## State (2026-08-15)
+## State (2026-08-15, evening)
 
-M0–M4 code-complete: **the game runs on the TouchPad** — menu and Uplink demo
-campaign at native 1024×768 on ref_gles1 (NanoGL→libGLES_CM), single-tap
-menus, full touch overlay + touch-look, and evdev gamepad + keyboard support
-(`engine/platform/linux/in_evdev_webos.c`, ported from sdlquake; profiles →
-K_A_BUTTON…/Joy_AxisMotionEvent). ipk 0.1.5 deployed to TouchPadE; pad/kbd
-hardware verification still pending.
+M0–M4 + packaging DONE, hardware-verified end to end: full **retail
+Half-Life and the bundled Uplink demo run on the TouchPad** — 1024×768
+ref_gles1, touch + evdev gamepads/keyboards with per-pad bind profiles,
+WOSQI-verified postinst/prerm, data-not-found + App-Museum-update menu
+notices, ipk 0.1.11 (playable out of the box; user data overrides per-file).
 
-Next: finish M4 hardware test, then M5 perf (30fps target, `r_dynamic 0`
-first), then M6 packaging (postinst needs Preware/WOSQI; palm-install won't
-run it).
+- **M5 perf: deferred by choice** ("perf is fine" — user, 2026-08-15).
+  30fps target + `r_dynamic 0` notes stand for whenever it's picked up.
+- **Next: App Museum release** — the in-app updater is wired and verified
+  (listing name **"Half-Life"**); remaining work is user-side: submit the
+  listing (assets like sdlquake's `_meta/`, downloadURI to the ipk on
+  appstorage). The WON-strings cosmetic (GameUI_* keys) is the only known
+  release nit.
 
 ## Layout
 
